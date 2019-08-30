@@ -8,13 +8,13 @@ debian1 ansible_host=172.18.0.20
 centos1 ansible_host=172.18.0.30
 
 [ubuntu:vars]
-docker_image="itwars/ubuntu-ansible"
+docker_image="tchit/ubuntu-ansible"
 
 [debian:vars]
-docker_image="itwars/debian-ansible"
+docker_image="tchit/debian-ansible"
 
 [centos:vars]
-docker_image="itwars/centos-ansible"
+docker_image="tchit/centos-ansible"
 
 [all:vars]
 network_name=test.eni
