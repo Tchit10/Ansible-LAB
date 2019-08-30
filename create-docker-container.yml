@@ -1,0 +1,58 @@
+---
+
+- name: "Create docker network"
+  hosts: localhost
+  gather_facts: no
+  tasks:
+    - name: "Create docker network"
+      docker_network:
+        name: "{{network_name}}"
+        ipam_options:
+          subnet: '172.18.0.0/16'
+          gateway: 172.18.0.1
+        state: present
+
+- name: "Generate Localhost RSA key"
+  hosts: localhost
+  gather_facts: no
+  tasks:
+    - name: "Generate Localhost RSA key"
+      command: ssh-keygen -t rsa -b 4096 -C "$(whoami)@$(hostname)-$(date)" -f ./id_rsa -q -N ""
+
+- name: "Create docker plateform"
+  hosts: [ "all" ]
+  gather_facts: no
+  vars:
+    ansible_connection: local
+    my_etc_hosts:
+      {
+        "debian1": 172.18.0.10,
+        "ubuntu1": 172.18.0.20,
+        "centos1": 172.18.0.30
+       }
+  tasks:
+    - name: "Create containers"
+      docker_container:
+        name: "{{inventory_hostname}}"
+        hostname: "{{inventory_hostname}}"
+        networks:
+          - name: "{{network_name}}"
+            ipv4_address: "{{ansible_host}}"
+        etc_hosts: "{{ my_etc_hosts | default({}) }}"
+        image: "{{docker_image|d('itwars/ubuntu-ansible')}}"
+        volumes: [ '/run', '/sys/fs/cgroup' ]
+        privileged: yes
+        state: started
+
+#- name: "Copy SSH key on each containers"
+#  hosts: [ "all" ]
+#  gather_facts: no
+#  vars:
+#    ansible_connection: local
+#  tasks:
+#    - name: "Copy SSH key on each containers"
+#     command: ssh-copy-id -i ./id_rsa root@{{inventory_hostname}}
+#      authorized_key:
+#        user: info
+#        state: present
+#        key: "{{ lookup('file', './id_rsa.pub') }}"

@@ -1,0 +1,20 @@
+---
+
+- name: "Fill /etc/hosts file"
+  hosts: localhost
+  tasks:
+    - name: "Add ubuntu host"
+      lineinfile:
+        dest: /etc/hosts
+        line: "172.18.0.10	ubuntu1"
+        state: present
+    - name: "Add debian host"
+      lineinfile:
+        dest: /etc/hosts
+        line: "172.18.0.20      debian1"
+        state: present
+    - name: "Add centos host"
+      lineinfile:
+        dest: /etc/hosts
+        line: "172.18.0.30      centos1"
+        state: present
