@@ -1,7 +1,7 @@
 FROM centos
 
 RUN yum update -y \
-&&  yum install -y openssh-server python \
+&&  yum install -y openssh-server python nano \
 &&  yum clean all \
 &&  sed -i 's/#PermitRootLogin yes/PermitRootLogin yes/' /etc/ssh/sshd_config \
 &&  echo 'root:toor' | chpasswd \
