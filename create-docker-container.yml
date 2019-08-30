@@ -22,6 +22,7 @@
 - name: "Create docker plateform"
   hosts: [ "all" ]
   gather_facts: no
+  remote_user: root
   vars:
     ansible_connection: local
     my_etc_hosts:

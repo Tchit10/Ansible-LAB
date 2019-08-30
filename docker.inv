@@ -18,5 +18,6 @@ docker_image="tchit/centos-ansible"
 
 [all:vars]
 network_name=test.eni
-ansible_connection=docker
+ansible_connection=ssh
+ansible_user=root
 user_name=info
