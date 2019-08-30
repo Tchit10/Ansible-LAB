@@ -39,20 +39,19 @@
           - name: "{{network_name}}"
             ipv4_address: "{{ansible_host}}"
         etc_hosts: "{{ my_etc_hosts | default({}) }}"
-        image: "{{docker_image|d('itwars/ubuntu-ansible')}}"
+        image: "{{docker_image|d('tchit/ubuntu-ansible')}}"
         volumes: [ '/run', '/sys/fs/cgroup' ]
         privileged: yes
         state: started
 
-#- name: "Copy SSH key on each containers"
-#  hosts: [ "all" ]
-#  gather_facts: no
-#  vars:
-#    ansible_connection: local
-#  tasks:
-#    - name: "Copy SSH key on each containers"
-#     command: ssh-copy-id -i ./id_rsa root@{{inventory_hostname}}
-#      authorized_key:
-#        user: info
-#        state: present
-#        key: "{{ lookup('file', './id_rsa.pub') }}"
+- name: "Copy SSH key on each containers"
+  hosts: [ "all" ]
+  gather_facts: no
+  vars:
+    ansible_connection: local
+  tasks:
+    - name: "Copy SSH key on each containers"
+      authorized_key:
+        user: "{{user_name}}"
+        state: present
+        key: "{{ lookup('file', './id_rsa.pub') }}"
